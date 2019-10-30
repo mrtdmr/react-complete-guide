@@ -4,7 +4,8 @@ import Person from './Person/Person';
 import UserInput from './UserInput/UserInput';
 import UserOutput from './UserOutput/UserOutput';
 import person from './Person/Person';
-
+import Validation from './Validation/Validation';
+import Char from './Char/Char';
 class App extends Component {
     state = {
         persons: [
@@ -14,7 +15,9 @@ class App extends Component {
         ],
         otherState: 'some other value',
         userName: 'Murat',
-        showPersons: false
+        showPersons: false,
+        text: '',
+        textLength: 0
     };
     /*
     switchNameHandler = newName => {
@@ -46,6 +49,11 @@ class App extends Component {
             persons: persons
         });
     };
+    getTextLengthHandler = event => {
+        const text = event.target.value;
+        const length = text.length;
+        this.setState({ text: text, textLength: length });
+    };
     userNameChanged = event => {
         this.setState({ userName: event.target.value });
     };
@@ -56,6 +64,12 @@ class App extends Component {
         const doesShow = this.state.showPersons;
         this.setState({ showPersons: !doesShow });
     };
+    deleteCharHandler = index => {
+        const charList = this.state.text.split('');
+        charList.splice(index, 1);
+        const updatedText = charList.join('');
+        this.setState({ text: updatedText });
+    };
     render() {
         const style = {
             backgroundColor: 'white',
@@ -65,6 +79,7 @@ class App extends Component {
             cursor: 'pointer'
         };
         //<button onClick={() => this.switchNameHandler('Maximilian')}></button>
+
         let persons = null;
         if (this.state.showPersons) {
             persons = (
@@ -101,6 +116,15 @@ class App extends Component {
                 </div>
             );
         }
+        const charList = this.state.text.split('').map((ch, index) => {
+            return (
+                <Char
+                    char={ch}
+                    key={index}
+                    clicked={() => this.deleteCharHandler(index)}
+                />
+            );
+        });
         return (
             <div className='App'>
                 <h1>Hi, I'm a React App</h1>
@@ -132,6 +156,21 @@ class App extends Component {
                     </div>
                 ) : null*/}
                 {persons}
+                <p>
+                    <input
+                        type='text'
+                        onChange={this.getTextLengthHandler}
+                        value={this.state.text}
+                    ></input>
+                </p>
+                <p>
+                    The length of text you have entered is{' '}
+                    {this.state.text.length} characters.
+                </p>
+                <p>
+                    <Validation textLength={this.state.text.length} />
+                </p>
+                {charList}
                 {/**
                     <UserInput
                     changed={this.userNameChanged}
